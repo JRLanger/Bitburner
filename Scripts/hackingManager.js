@@ -1,7 +1,7 @@
 /** @param {NS} ns */
 
-import { main as networkUpdate } from "/networkUpdate.js";
-import { main as targetEvaluation } from "/targetEvaluation.js";
+import { main as networkUpdate } from "/Scripts/networkUpdate.js";
+import { main as targetEvaluation } from "/Scripts/targetEvaluation.js";
 
 export async function main(ns) {
   let delay = 250;
