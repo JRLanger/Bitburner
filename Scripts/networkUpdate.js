@@ -1,9 +1,8 @@
 /** @param {NS} ns */
 
 class Script {
-  constructor(ns, path, timeMultiplier, baseHackTime, scriptDelay) {
+  constructor(ns, path) {
     this.path = path;
-    this.timeMultiplier = timeMultiplier;
     this.ram = ns.getScriptRam(path);
   }
 }
@@ -11,10 +10,10 @@ class Script {
 export function main(ns) {
 
   const scripts = {
-    hack: new Script(ns, '/Scripts/Attack-Scripts/hack.js', 1),
-    counterHack: new Script(ns, '/Scripts/Attack-Scripts/weaken.js', 4),
-    grow: new Script(ns, '/Scripts/Attack-Scripts/grow.js', 3.2),
-    counterGrow: new Script(ns, '/Scripts/Attack-Scripts/weaken.js', 4)
+    hack: new Script(ns, '/Scripts/Attack-Scripts/hack.js'),
+    counterHack: new Script(ns, '/Scripts/Attack-Scripts/weaken.js'),
+    grow: new Script(ns, '/Scripts/Attack-Scripts/grow.js'),
+    counterGrow: new Script(ns, '/Scripts/Attack-Scripts/weaken.js')
   };
 
   const homeServer = ns.getServer("home");

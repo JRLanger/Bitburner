@@ -4,11 +4,11 @@ class Target {
     constructor(ns, server, delay, scripts) {
   
       Object.assign(this, server);
-      this.baseHackTime = ns.getHackTime(this.hostname);
-      this.hackTime = this.baseHackTime * scripts.hack.timeMultiplier;
-      this.counterHackTime = this.baseHackTime * scripts.counterHack.timeMultiplier;
-      this.growTime = this.baseHackTime * scripts.grow.timeMultiplier;
-      this.counterGrowTime = this.baseHackTime * scripts.counterGrow.timeMultiplier;
+      
+      this.hackTime = ns.getHackTime(this.hostname);
+      this.counterHackTime = ns.getWeakenTime(this.hostname);
+      this.growTime = ns.getGrowTime(this.hostname);
+      this.counterGrowTime = ns.getWeakenTime(this.hostname);
   
       this.delay = delay;
       this.maxBatches = Math.floor(this.counterHackTime / (5 * this.delay));
@@ -27,7 +27,9 @@ class Target {
       this.chanceToHack = ns.hackAnalyzeChance(this.hostname);
   
     }
-  
+
+    
+    // For an acurate calculation of weakenAnalyse and growAnalize the number of cores of the excuting server needs to be taken into account.
     calculateThreads(ns, percentage) {
       let hackThreads = Math.floor(ns.hackAnalyzeThreads(this.hostname, this.moneyMax * (percentage / 100)));
       let counterHackThreads = (Math.ceil(ns.hackAnalyzeSecurity(hackThreads) / ns.weakenAnalyze(1))) + Math.ceil(0.1 * (Math.ceil(ns.hackAnalyzeSecurity(hackThreads) / ns.weakenAnalyze(1))));
@@ -112,6 +114,3 @@ class Target {
 
     return targets;
   }
-
-//  if (target.hackDifficulty !== target.minDifficulty || target.moneyAvailable !== target.moneyMax) {
-//  }
