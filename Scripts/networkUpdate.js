@@ -11,10 +11,10 @@ class Script {
 export function main(ns) {
 
   const scripts = {
-    hack: new Script(ns, '/Scripts/hack.js', 1),
-    counterHack: new Script(ns, '/Scripts/weaken.js', 4),
-    grow: new Script(ns, '/Scripts/grow.js', 3.2),
-    counterGrow: new Script(ns, '/Scripts/weaken.js', 4)
+    hack: new Script(ns, '/Scripts/Attack-Scripts/hack.js', 1),
+    counterHack: new Script(ns, '/Scripts/Attack-Scripts/weaken.js', 4),
+    grow: new Script(ns, '/Scripts/Attack-Scripts/grow.js', 3.2),
+    counterGrow: new Script(ns, '/Scripts/Attack-Scripts/weaken.js', 4)
   };
 
   const homeServer = ns.getServer("home");
@@ -66,9 +66,6 @@ export function main(ns) {
   ns.tprint(`      Network updated. ${newServers} new server(s) added`);
   ns.tprint(`--------------------------------------------------`);
 
-  for (const server of servers) {
-    ns.tprint(`Server: ${server.hostname}`)
-  }
   return [servers, scripts];
 }
 

@@ -13,7 +13,7 @@ export async function main(ns) {
         let serverWithEnoughRam = findServerWithEnoughRam(ns, servers, scripts, target);
 
         if (serverWithEnoughRam) {
-            executeScriptsOnServer(ns, serverWithEnoughRam, scripts, target);
+            await executeScriptsOnServer(ns, serverWithEnoughRam, scripts, target);
             await ns.sleep(5 * target.delay);
         } else {
             ns.tprint("No server with enough RAM found. Retrying in 15 seconds...");
@@ -33,6 +33,9 @@ function findServerWithEnoughRam(ns, servers, scripts, target) {
     // Find a server with enough available RAM
     for (let server of servers) {
         let availableRam = ns.getServerMaxRam(server.hostname) - ns.getServerUsedRam(server.hostname);
+        if (server.hostname === 'home') {
+            availableRam -= 1000; // Reserve 1TB for home server
+        }
         if (availableRam >= totalRamRequired) {
             return server;
         }
@@ -41,7 +44,7 @@ function findServerWithEnoughRam(ns, servers, scripts, target) {
     return null;
 }
 
-function executeScriptsOnServer(ns, server, scripts, target) {
+async function executeScriptsOnServer(ns, server, scripts, target) {
     const delayMapping = {
         'hack': 'hackScriptDelay',
         'grow': 'growScriptDelay',
@@ -49,13 +52,17 @@ function executeScriptsOnServer(ns, server, scripts, target) {
         'counterGrow': 'counterGrowScriptDelay'
     };
 
+    const promises = [];
+
     for (let scriptType of ['hack', 'counterHack', 'grow', 'counterGrow']) {
         let threads = target[`${scriptType}Threads`];
         if (threads <= 0) {
             continue;
         }
-        
+
         let delayArgument = target[delayMapping[scriptType]];
-        ns.exec(scripts[scriptType].path, server.hostname, threads, target.hostname, delayArgument);
+        promises.push(ns.exec(scripts[scriptType].path, server.hostname, threads, target.hostname, delayArgument));
     }
+
+    await Promise.all(promises);
 }

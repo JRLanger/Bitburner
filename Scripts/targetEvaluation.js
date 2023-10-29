@@ -76,59 +76,42 @@ class Target {
       this.counterGrowThreads = threads.counterGrowThreads;
   
     }
-  
-    // maybe add the proper delays here for the hwgwBatchLaucher
-    async prepareTargetForOptimumState(ns, scripts, servers) {
-      if (this.hackDifficulty !== this.minDifficulty || this.moneyAvailable !== this.moneyMax) {
-        ns.tprint(`Preping server ${this.hostname}...`)
-        this.hackThreads = 0;
-        this.counterHackThreads = Math.ceil((this.hackDifficulty - this.minDifficulty) / ns.weakenAnalyze(1));
-        const growPercentage = ((this.moneyMax - this.moneyAvailable) / this.moneyAvailable);
-        this.growThreads = Math.ceil(ns.growthAnalyze(this.hostname, (1 + growPercentage)));
-        this.counterGrowThreads = Math.ceil(ns.growthAnalyzeSecurity(this.growThreads) / ns.weakenAnalyze(1));
-  
-        ns.getPortHandle(1);
-        const serversAndScripts = { servers, scripts }
-        ns.writePort(1, JSON.stringify(serversAndScripts));
-  
-        ns.getPortHandle(2);
-        ns.writePort(2, JSON.stringify(this));
-        await ns.exec("/hwgwBatchLauncher.js", "home", 1);
-      }
-  
-      return Promise.resolve();
-    }
   }
   
   export async function main(ns, servers, scripts, delay) {
     let targets = [];
-  
+
     for (const server of servers) {
       if (server.moneyMax === 0 || server.hasAdminRights === false) continue;
       const target = new Target(ns, server, delay, scripts);
-      await target.prepareTargetForOptimumState(ns, scripts, servers);
       target.findOptimalPercentage(ns, scripts);
       targets.push(target);
     }
-  
+
     targets.sort((a, b) => b.bestDollarPerRam - a.bestDollarPerRam);
-  //  targets = targets.filter(target => target.hostname === "ecorp" || target.hostname === "megacorp" || target.hostname === "4sigma" || target.hostname === "nwo");
-  
+
     ns.tprint(`    Targets organized for the Attack Scripts:     `);
-    ns.tprint(`--------------------------------------------------`);
-  
+    ns.tprint(`----------------------------------------------------------------------------`);
+    ns.tprint(`|       Hostname       |   Best %   |  $ / RAM   |  Security  |     $      |`);
+    ns.tprint(`----------------------------------------------------------------------------`);
+
     for (const target of targets) {
-  
       const hostnamePad = 20;
       const valuePad = 10;
-  
+
       const paddedHostname = target.hostname.padEnd(hostnamePad);
       const paddedPercentage = (`${target.bestPercentage}%`).padStart(valuePad);
       const paddedDollarPerRam = ("$" + `${ns.formatNumber(target.bestDollarPerRam, 2)}`).padStart(valuePad);
-  
-      ns.tprint(`| ${paddedHostname} | ${paddedPercentage} | ${paddedDollarPerRam} |`);
+      const paddedHackDifficulty = (`${ns.formatNumber(target.hackDifficulty / target.minDifficulty * 100, 0)}%`).padStart(valuePad);
+      const paddedMoneyAvailable = (`${ns.formatNumber(target.moneyAvailable / target.moneyMax * 100, 0)}%`).padStart(valuePad);
+
+      ns.tprint(`| ${paddedHostname} | ${paddedPercentage} | ${paddedDollarPerRam} | ${paddedHackDifficulty} | ${paddedMoneyAvailable} |`);
     }
-    ns.tprint(`--------------------------------------------------`);
-  
+
+    ns.tprint(`----------------------------------------------------------------------------`);
+
     return targets;
   }
+
+//  if (target.hackDifficulty !== target.minDifficulty || target.moneyAvailable !== target.moneyMax) {
+//  }

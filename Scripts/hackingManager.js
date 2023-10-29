@@ -26,7 +26,7 @@ export async function main(ns) {
 
         ns.getPortHandle(2);
         ns.writePort(2, JSON.stringify(target));
-        await ns.exec("/hwgwBatchLauncher.js", "home", 1);
+        await ns.exec("/Scripts/hwgwBatchLauncher.js", "home", 1);
       }
     }
 
