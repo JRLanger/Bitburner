@@ -16,7 +16,6 @@ export function main(ns) {
     new Script(ns, 'counterGrow', '/Scripts/Attack-Scripts/weaken.js')
   ];
 
-
   const homeServer = ns.getServer("home");
   let servers = [homeServer];
   const seenServers = new Set([homeServer.hostname]);
@@ -63,11 +62,17 @@ export function main(ns) {
     }
   }
 
+  // Convert servers and scripts to string format
+  const serversString = JSON.stringify(servers);
+  const scriptsString = JSON.stringify(scripts);
+
+  // Write servers and scripts to .txt files
+  ns.write('/Files/servers.txt', serversString, 'w');
+  ns.write('/Files/scripts.txt', scriptsString, 'w');
+
   ns.tprint(`--------------------------------------------------`);
   ns.tprint(`      Network updated. ${newServers} new server(s) added`);
   ns.tprint(`--------------------------------------------------`);
-
-  return [servers, scripts];
 }
 
 /*

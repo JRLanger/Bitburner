@@ -1,9 +1,12 @@
 /** @param {NS} ns */
 
 export async function main(ns) {
-    const serversAndScripts = JSON.parse(ns.peek(1));
-    const servers = serversAndScripts.servers;
-    const scripts = serversAndScripts.scripts;
+  // Read servers and scripts from .txt files
+  const serversFile = ns.read('/Files/servers.txt');
+  const servers = JSON.parse(serversFile);
+  const scriptsFile = ns.read('/Files/scripts.txt');
+  const scripts = JSON.parse(scriptsFile);
+  
     const target = JSON.parse(ns.readPort(2));
 
     let playerInitialLevel = ns.getHackingLevel();
