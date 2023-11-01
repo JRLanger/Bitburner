@@ -31,7 +31,7 @@ class Target {
     
     // For an acurate calculation of weakenAnalyse and growAnalize the number of cores of the excuting server needs to be taken into account.
     calculateThreads(ns, percentage) {
-      let hackThreads = Math.floor(ns.hackAnalyzeThreads(this.hostname, this.moneyMax * (percentage / 100)));
+      let hackThreads = Math.ceil(ns.hackAnalyzeThreads(this.hostname, this.moneyMax * (percentage / 100)));
       let counterHackThreads = (Math.ceil(ns.hackAnalyzeSecurity(hackThreads) / ns.weakenAnalyze(1))) + Math.ceil(0.1 * (Math.ceil(ns.hackAnalyzeSecurity(hackThreads) / ns.weakenAnalyze(1))));
       const growPercentage = (percentage / (100 - percentage));
       let growThreads = (Math.ceil(ns.growthAnalyze(this.hostname, (1 + growPercentage)))) + Math.ceil(0.1 * (Math.ceil(ns.growthAnalyze(this.hostname, (1 + growPercentage)))));
@@ -48,35 +48,39 @@ class Target {
     findOptimalPercentage(ns, scripts) {
       let bestPercentage = null;
       let bestDollarPerRam = 0;
-  
+    
       for (let percentage = 1; percentage <= 99; percentage++) {
         const threads = this.calculateThreads(ns, percentage);
-  
+    
         this.hackThreads = threads.hackThreads;
         this.counterHackThreads = threads.counterHackThreads;
         this.growThreads = threads.growThreads;
         this.counterGrowThreads = threads.counterGrowThreads;
-  
+    
+        const hackScript = scripts.find(script => script.operation === 'hack');
+        const counterHackScript = scripts.find(script => script.operation === 'counterHack');
+        const growScript = scripts.find(script => script.operation === 'grow');
+        const counterGrowScript = scripts.find(script => script.operation === 'counterGrow');
+    
         const moneyStolenPerAttack = (this.moneyMax * (percentage / 100)) * this.chanceToHack;
-        const totalRamUsed = (this.hackThreads * scripts.hack.ram) + (this.counterHackThreads * scripts.counterHack.ram) + (this.growThreads * scripts.grow.ram) + (this.counterGrowThreads * scripts.counterGrow.ram);
+        const totalRamUsed = (this.hackThreads * hackScript.ram) + (this.counterHackThreads * counterHackScript.ram) + (this.growThreads * growScript.ram) + (this.counterGrowThreads * counterGrowScript.ram);
         const dollarPerRAM = moneyStolenPerAttack / totalRamUsed;
-  
+    
         if (dollarPerRAM > bestDollarPerRam) {
           bestDollarPerRam = dollarPerRAM;
           bestPercentage = percentage;
         }
       }
-  
+    
       this.bestPercentage = bestPercentage;
       this.bestDollarPerRam = bestDollarPerRam;
-  
+    
       const threads = this.calculateThreads(ns, this.bestPercentage);
-  
+    
       this.hackThreads = threads.hackThreads;
       this.counterHackThreads = threads.counterHackThreads;
       this.growThreads = threads.growThreads;
       this.counterGrowThreads = threads.counterGrowThreads;
-  
     }
   }
   
@@ -90,6 +94,8 @@ class Target {
       targets.push(target);
     }
 
+    targets = targets.filter(target => target.hostname === "ecorp");
+    
     targets.sort((a, b) => b.bestDollarPerRam - a.bestDollarPerRam);
 
     ns.tprint(`    Targets organized for the Attack Scripts:     `);

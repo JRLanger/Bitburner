@@ -1,20 +1,21 @@
 /** @param {NS} ns */
 
 class Script {
-  constructor(ns, path) {
+  constructor(ns, operation, path) {
+    this.operation = operation;
     this.path = path;
     this.ram = ns.getScriptRam(path);
   }
 }
 
 export function main(ns) {
+  const scripts = [
+    new Script(ns, 'hack', '/Scripts/Attack-Scripts/hack.js'),
+    new Script(ns, 'counterHack', '/Scripts/Attack-Scripts/weaken.js'),
+    new Script(ns, 'grow', '/Scripts/Attack-Scripts/grow.js'),
+    new Script(ns, 'counterGrow', '/Scripts/Attack-Scripts/weaken.js')
+  ];
 
-  const scripts = {
-    hack: new Script(ns, '/Scripts/Attack-Scripts/hack.js'),
-    counterHack: new Script(ns, '/Scripts/Attack-Scripts/weaken.js'),
-    grow: new Script(ns, '/Scripts/Attack-Scripts/grow.js'),
-    counterGrow: new Script(ns, '/Scripts/Attack-Scripts/weaken.js')
-  };
 
   const homeServer = ns.getServer("home");
   let servers = [homeServer];
@@ -56,7 +57,8 @@ export function main(ns) {
       availablePrograms.forEach(program => programToFunction[program](server.hostname));
       ns.nuke(server.hostname);
       newServers++;
-      ns.scp([scripts.hack.path, scripts.counterHack.path, scripts.grow.path, scripts.counterGrow.path], server.hostname, "home");
+      const scriptPaths = scripts.map(script => script.path);
+      ns.scp(scriptPaths, server.hostname, "home");
       ns.tprint(`Server ${server.hostname} successfully cracked, scripts injected`);
     }
   }
