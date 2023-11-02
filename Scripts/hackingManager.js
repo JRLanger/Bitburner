@@ -68,37 +68,3 @@ export async function main(ns) {
   }
 
 }
-
-/*
-  function getPrograms(ns, player) {
-    // Check if the tor router is already purchased
-    if (!ns.hasTorRouter()) {
-      ns.print("Buying tor router...");
-      ns.purchaseTorRouter();
-  
-      if (ns.hasTorRouter()) {
-        ns.toast("Successfully purchased tor router!");
-      } else {
-        ns.toast("Failed to purchase tor router. Maybe you don't have enough money?");
-      }
-    } else {
-      ns.toast("You already have the tor router.");
-    }
-    
-    ns.purchaseProgram("BruteSSH.exe");
-    ns.print("BruteSSH.exe");
-    ns.toast("BruteSSH.exe");
-    ns.purchaseProgram("FTPCrack.exe");
-    ns.print("FTPCrack.exe");
-    ns.toast("FTPCrack.exe");
-    ns.purchaseProgram("relaySMTP.exe");
-    ns.print("relaySMTP.exe");
-    ns.toast("relaySMTP.exe");
-    ns.purchaseProgram("HTTPWorm.exe");
-    ns.print("HTTPWorm.exe");
-    ns.toast("HTTPWorm.exe");
-    ns.purchaseProgram("SQLInject.exe");
-    ns.print("SQLInject.exe");
-    ns.toast("SQLInject.exe");
-  }
-*/

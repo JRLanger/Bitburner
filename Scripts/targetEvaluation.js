@@ -105,7 +105,7 @@ export async function main(ns) {
     targets.push(target);
   }
 
-  targets = targets.filter(target => target.hostname === "ecorp" || "megacorp");
+  targets = targets.filter(target => target.hostname === "ecorp" || target.hostname === "megacorp" || target.hostname === "clarkinc" || target.hostname === "kuai-gong" || target.hostname === "b-and-a" || target.hostname === "4sigma" || target.hostname === "omnitek" || target.hostname === "nwo" || target.hostname === "blade");
 
   targets.sort((a, b) => b.bestDollarPerRam - a.bestDollarPerRam);
 

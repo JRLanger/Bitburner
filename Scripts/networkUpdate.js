@@ -75,32 +75,31 @@ export function main(ns) {
   ns.tprint(`--------------------------------------------------`);
 }
 
-/*
-server.hostname
-server.ip
-server.sshPortOpen
-server.ftpPortOpen
-server.smtpPortOpen
-server.httpPortOpen
-server.sqlPortOpen
-server.hasAdminRights
-server.cpuCores
-server.isConnectedTo
-server.ramUsed
-server.maxRam
-server.organizationName
-server.purchasedByPlayer
-server.backdoorInstalled
-server.baseDifficulty
-server.hackDifficulty
-server.minDifficulty
-server.moneyAvailable
-server.moneyMax
-server.numOpenPortsRequired
-server.openPortCount
-server.requiredHackingSkill
-server.serverGrowth
-
-When only rooted servers are needed:
-servers = servers.filter(server => server.hasAdminRights);
-*/
+/**
+ * List of default server properties:
+ * 
+ * server.hostname
+ * server.ip
+ * server.sshPortOpen
+ * server.ftpPortOpen
+ * server.smtpPortOpen
+ * server.httpPortOpen
+ * server.sqlPortOpen
+ * server.hasAdminRights
+ * server.cpuCores
+ * server.isConnectedTo
+ * server.ramUsed
+ * server.maxRam
+ * server.organizationName
+ * server.purchasedByPlayer
+ * server.backdoorInstalled
+ * server.baseDifficulty
+ * server.hackDifficulty
+ * server.minDifficulty
+ * server.moneyAvailable
+ * server.moneyMax
+ * server.numOpenPortsRequired
+ * server.openPortCount
+ * server.requiredHackingSkill
+ * server.serverGrowth
+ */
